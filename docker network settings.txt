@@ -1,0 +1,53 @@
+docker network settings
+
+//docker daemon.json
+{
+    "builder": {
+        "gc": {
+            "defaultKeepStorage": "20GB",
+            "enabled": true
+        }
+    },
+    "default-network": "custom",
+    "networks": {
+        "custom": {
+            "IPAM": {
+                "Config": [
+                    {
+                        "Subnet": "192.168.29.0/24",
+                        "Gateway": "192.168.29.1"
+                    }
+                ]
+            }
+        }
+    },
+    "experimental": false
+}
+
+
+
+//check network config
+docker network inspect custom
+
+
+//delete network 
+docker network rm custom
+
+
+
+//build
+docker-compose up --build --no-recreate -d
+
+//run
+docker-compose up -d    
+
+
+//docker general run command
+docker-compose ps
+
+
+//enter docker container
+docker exec -it acd_dashboard-client-1 sh  
+
+
+//   

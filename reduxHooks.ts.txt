@@ -1,0 +1,245 @@
+//reduxHooks.ts
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { AppDispatch, RootState } from "./store";
+
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+
+
+
+
+//apiSlice.ts
+
+import { BaseQueryApi, createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { logout } from '../../features/authSlice/authSlice';
+
+
+
+const baseQuery = fetchBaseQuery({
+    baseUrl: `http://192.168.29.20:5000`,
+    credentials: 'include',
+    prepareHeaders: (headers, { getState }) => {
+        const token = localStorage.getItem('token');;
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+        }
+        return headers;
+    }
+});
+
+const baseQueryWithReauth = async (args: FetchArgs, api: BaseQueryApi, extraOptions?: unknown): Promise<any> => {
+    const result = await baseQuery(args, api, extraOptions as unknown as {});
+
+    if (result?.error) {
+        const errorResponse = result.error as any; 
+    
+        if (errorResponse.status === 401) {
+          window.alert(errorResponse.data.message);
+          api.dispatch(logout());
+          return result;
+        } else if (errorResponse.status === 'FETCH_ERROR') {
+          console.log(errorResponse.status);
+          return result;
+        } else {
+          window.alert(errorResponse.data.message);
+          return result;
+        }
+      }
+      return result;
+    };
+
+
+export const apiSlice = createApi({
+    reducerPath: 'authApi',
+    baseQuery: baseQueryWithReauth,
+    endpoints: () => ({}),
+});
+
+
+
+
+//store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import pathReducer from '../features/pathSlice/remberPathSlice';
+import authReducer from "../features/authSlice/authSlice"
+import { apiSlice } from "./api/apiSlice";
+
+export const store = configureStore({
+    reducer: {
+        [apiSlice.reducerPath]: apiSlice.reducer,
+        auth: authReducer,
+        path: pathReducer
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({serializableCheck: false}).concat(apiSlice.middleware),
+    devTools: true,
+});
+
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+setupListeners(store.dispatch);
+
+
+
+
+
+
+
+
+
+//authSlice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
+
+
+export interface authState {
+    name: string | null;
+    token: string | null;
+}
+
+const initialState: authState = {
+    name: null,
+    token: null
+}
+
+
+
+export const authSlice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+        setUser: (state, action: PayloadAction<{ token: string }>) => {
+            state.token = action.payload.token;
+            localStorage.setItem('token', action.payload.token);
+        },
+
+        logout: (state) => {
+            localStorage.removeItem("token")
+            state.token = null
+            window.location.reload();
+        }
+    }
+})
+
+
+export const selectedAuth = (state: RootState) => state.auth
+
+export const { setUser, logout } = authSlice.actions;
+
+export default authSlice.reducer;
+
+
+
+
+
+//loginSlice.ts
+
+
+import { apiSlice } from "../../app/api/apiSlice";
+
+const loginSlice = apiSlice.injectEndpoints({
+
+
+
+    endpoints: (builder) => ({
+        loginUser: builder.mutation({
+            query: (body: { email: string, password: string }) => {
+                return {
+                    url: '/user/api/v1/login',
+                    method: 'POST',
+                    body,
+                }
+            },
+        }),
+
+
+
+    })
+})
+
+export const { useLoginUserMutation } = loginSlice;
+
+
+
+
+//iceyeSlice.ts
+import { apiSlice } from "../../app/api/apiSlice";
+
+
+
+
+
+const iceyeSlice = apiSlice.injectEndpoints({
+    // tagTypes: ['Post', 'User'],
+    
+    endpoints: (builder) => ({
+
+        getIceyeData: builder.query({
+            query: () => {
+                return {
+                    url: '/tasking',
+                    method: 'GET',
+                }
+            },
+            // providesTags: ['Post'],
+        }),
+
+
+        refreshPage: builder.query({
+            query: () => {
+                return {
+                    url: '/tasking/iceyefullsync',
+                    method: 'GET',
+                }
+            },
+            // providesTags: ['User'],
+        }),
+
+        geParticularData: builder.mutation({
+            query: ({id}) => {
+                return {
+                    url: `/tasking/${id}/get-download`,
+                    method: 'GET',
+                }
+            },
+            // providesTags: ['User'],
+        }),
+
+
+    })
+})
+
+export const { useGetIceyeDataQuery, useRefreshPageQuery, useGeParticularDataMutation } = iceyeSlice;
+
+
+
+
+//tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

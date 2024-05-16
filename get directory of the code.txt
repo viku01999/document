@@ -1,0 +1,30 @@
+get directory of the code
+function Get-DirectoryStructure {
+    param (
+        [string]$Path = ".",
+        [int]$IndentLevel = 0
+    )
+
+    $Indent = "    " * $IndentLevel
+
+    # Get directories
+    $Directories = Get-ChildItem -Directory -Path $Path
+
+    # Get files
+    $Files = Get-ChildItem -File -Path $Path
+
+    # Print current directory
+    Write-Host "$Indent───$($(Split-Path -Path $Path -Leaf))"
+
+    foreach ($Directory in $Directories) {
+        Get-DirectoryStructure -Path $Directory.FullName -IndentLevel ($IndentLevel + 1)
+    }
+
+    # Print files
+    foreach ($File in $Files) {
+        Write-Host "$Indent    ├───$($File.Name)"
+    }
+}
+
+# Start from the root directory
+Get-DirectoryStructure -Path "D:\microservices\microservices"
