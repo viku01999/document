@@ -1,0 +1,15 @@
+#kafka
+1-Install Jdk and setup environment
+2-Download kafka
+3-Extract into C:\Users\vikas
+4-Navigate C:\Users\vikas\kafka
+5-run zookeeper ( .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties )
+6-run kafka server ( .\bin\windows\kafka-server-start.bat .\config\server.properties )
+7-run producer to create topic ( .\bin\windows\kafka-topics.bat --create --topic product-orders --bootstrap-server localhost:9092 )
+8-run this in producer ( .\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic product-orders )
+9-run consumer ( .\bin\windows\kafka-console-consumer.bat --topic product-orders --bootstrap-server localhost:9092 --from-beginning )
+10-Send {"Hello kafka how are you."}
+{** YOU HAVE CONFIGURED SUCCESSFULLY **}
+11-Now u can stop everything using ctrl+c
+12-stop zookeeper ( \bin\windows\zookeeper-server-stop.bat .\config\zookeeper.properties )
+12-stop server ( .\bin\windows\kafka-server-stop.bat .\config\server.properties )
