@@ -11,5 +11,5 @@
 10-Send {"Hello kafka how are you."}
 {** YOU HAVE CONFIGURED SUCCESSFULLY **}
 11-Now u can stop everything using ctrl+c
-12-stop zookeeper ( \bin\windows\zookeeper-server-stop.bat .\config\zookeeper.properties )
+12-stop zookeeper ( .\bin\windows\zookeeper-server-stop.bat .\config\zookeeper.properties )
 12-stop server ( .\bin\windows\kafka-server-stop.bat .\config\server.properties )
