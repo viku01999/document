@@ -206,7 +206,7 @@ rm -rf /tmp/kraft-combined-logs
 
 #After this cleanup, follow these steps to reinitialize:
 bin/kafka-storage.sh random-uuid
-bin/kafka-storage.sh format -t 9hlByJVdSzStkWat3hqBAA -c config/server.properties
+bin/kafka-storage.sh format -t 0O59dsTuRyOYM02goHFl7w -c config/server.properties
 bin/kafka-server-start.sh config/server.properties
 
 
