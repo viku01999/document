@@ -4,8 +4,8 @@
 echo "Creating necessary directories..."
 mkdir -p ~/Documents/spade_files/images/iceye_downloads
 mkdir -p ~/Documents/spade_files/images/profilePics
-mkdir -p ~/Documents/spade_files/images/rechargeTransPic
-mkdir -p ~/Documents/spade_files/images/subsTransPic
+mkdir -p ~/Documents/spade_files/images/rechargeTransPics
+mkdir -p ~/Documents/spade_files/images/subsTransPics
 mkdir -p ~/Documents/spade_files/images/ticketPics
 echo "Directories created."
 
@@ -154,6 +154,10 @@ echo "List all windows: Ctrl + b, then w"
 echo "Rename a window: Ctrl + b, then ,"
 echo "List tmux sessions: tmux ls"
 echo "Attach tmux session: tmux attach-session -t <session_name>"
+# Enable Mouse Mode in the Global Configuration
+set -g mouse on
+tmux source-file /etc/tmux.conf
+
 
 # Transfer files and hidden files
 echo "Transferring files and hidden files..."
@@ -243,3 +247,15 @@ sudo systemctl status cron
 # Local check
 echo "Running the script locally..."
 /home/suhora/start_tmux_on_boot.sh
+
+
+
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# Drop table
+psql -h 127.0.0.1 -U spade_admin -d external_user -c "DROP TABLE IF EXISTS public.oem_master CASCADE;"
+
+# add data in table staging
+PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/oem_backup.sql
+

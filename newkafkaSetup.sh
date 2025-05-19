@@ -200,9 +200,13 @@ bin/kafka-topics.sh --describe --topic demo-topic --bootstrap-server 192.168.29.
 # To completely delete all Kafka data
 rm -rf /tmp/kraft-combined-logs /tmp/kraft-metadata
 
+#Delete Old Kafka Data and Metadata(log directory info is sudo nano config/server.properties)(optionally)
+rm -rf /tmp/kraft-combined-logs
+
+
 #After this cleanup, follow these steps to reinitialize:
 bin/kafka-storage.sh random-uuid
-bin/kafka-storage.sh format -t f1kTemeUTO-UnPpMdz_lpQ -c config/server.properties
+bin/kafka-storage.sh format -t 9hlByJVdSzStkWat3hqBAA -c config/server.properties
 bin/kafka-server-start.sh config/server.properties
 
 
