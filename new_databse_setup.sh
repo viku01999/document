@@ -15,7 +15,7 @@ ALTER USER postgres WITH PASSWORD 'newpassword';
 
 -- Step 3: Create the user 'spade_admin' with password 'Spade_Suhora@123'
 echo "Creating user 'spade_admin'..."
-CREATE USER spade_admin WITH PASSWORD 'Spade_Suhora@123';
+CREATE USER spade_admin WITH PASSWORD 'WZf5RrrQ48egpjio';
 
 -- Step 4: Grant privileges to the user 'spade_admin'
 echo "Granting privileges to 'spade_admin'..."

@@ -197,6 +197,9 @@ show collections
 echo "Dropping collection..."
 db.commonFilters.drop()
 
+# check head 
+head /home/ubuntu/oem_service_manager_db.commonFilters.json
+
 # Import MongoDB data
 # First go to the normal terminal
 echo "Importing MongoDB data..."
@@ -256,6 +259,23 @@ echo "Running the script locally..."
 # Drop table
 psql -h 127.0.0.1 -U spade_admin -d external_user -c "DROP TABLE IF EXISTS public.oem_master CASCADE;"
 
-# add data in table staging
+# backup in table staging
 PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/oem_backup.sql
+pg_dump -h 172.31.31.226 -U spade_admin -W -d external_user -t public.product_master -f product_master.sql
 
+# restore in table staging
+PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/product_master.sql
+
+
+# ------------------------- drop all table----------------------------------------
+DROP TABLE IF EXISTS 
+  "SuperAdminPermission",
+  "department",
+  "internal_user",
+  "migrations",
+  "permissions",
+  "role",
+  "role_permissions",
+  "super_admin",
+  "verification"
+CASCADE;

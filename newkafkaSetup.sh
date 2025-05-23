@@ -206,7 +206,7 @@ rm -rf /tmp/kraft-combined-logs
 
 #After this cleanup, follow these steps to reinitialize:
 bin/kafka-storage.sh random-uuid
-bin/kafka-storage.sh format -t 0O59dsTuRyOYM02goHFl7w -c config/server.properties
+bin/kafka-storage.sh format -t AlBGlQFDSoSbwpcDUsKD3w -c config/server.properties
 bin/kafka-server-start.sh config/server.properties
 
 
@@ -225,13 +225,45 @@ bin/kafka-server-start.sh config/server.properties
 
 
 
+#-----------------------------------------------bin/properties------------------
+#!/bin/bash
 
+# limitations under the License.
 
+if [ $# -lt 1 ]; then
+    echo "USAGE: $0 [-daemon] server.properties [--override property=value]*"
+    exit 1
+fi
 
+base_dir=$(dirname $0)
 
+# Set Kafka log4j options if not already set
+if [ -z "$KAFKA_LOG4J_OPTS" ]; then
+    export KAFKA_LOG4J_OPTS="-Dlog4j2.configurationFile=$base_dir/../config/log4j2.yaml"
+fi
 
+# Set default Kafka heap memory settings
+if [ -z "$KAFKA_HEAP_OPTS" ]; then
+    export KAFKA_HEAP_OPTS="-Xmx1G -Xms1G"
+fi
 
+# Clean Kafka start: remove JMX exporter
+# export KAFKA_OPTS is intentionally omitted
 
+EXTRA_ARGS=${EXTRA_ARGS-'-name kafkaServer -loggc'}
+
+COMMAND=$1
+case $COMMAND in
+  -daemon)
+    EXTRA_ARGS="-daemon $EXTRA_ARGS"
+    shift
+    ;;
+  *)
+    ;;
+esac
+
+# Run Kafka
+exec $base_dir/kafka-run-class.sh $EXTRA_ARGS kafka.Kafka "$@"
 
 
 
@@ -297,6 +329,10 @@ log.segment.bytes=1073741824
 # Interval for checking log retention policies
 log.retention.check.interval.ms=300000
 
+
+
+
+
 # Run this following command after adding this file into server.properties
 # run this following command
 bin/kafka-storage.sh random-uuid
@@ -305,3 +341,12 @@ bin/kafka-storage.sh format -t here config/server.properties <uuid >-c
 
 # To run the kafka
 bin/kafka-server-start.sh config/server.properties
+
+
+
+
+
+
+
+
+
