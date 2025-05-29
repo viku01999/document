@@ -206,7 +206,7 @@ rm -rf /tmp/kraft-combined-logs
 
 #After this cleanup, follow these steps to reinitialize:
 bin/kafka-storage.sh random-uuid
-bin/kafka-storage.sh format -t AlBGlQFDSoSbwpcDUsKD3w -c config/server.properties
+bin/kafka-storage.sh format -t zZVgy9GOTlOzW7R0iKSYfg -c config/server.properties
 bin/kafka-server-start.sh config/server.properties
 
 
@@ -286,7 +286,7 @@ controller.quorum.voters=1@192.168.29.13:9093
 ############################# Socket Server Settings #############################
 
 # Define the listeners for Kafka broker and controller
-listeners=PLAINTEXT://192.168.29.13:9092,CONTROLLER://192.168.29.13:9093
+listeners = PLAINTEXT://192.168.29.13:9092,CONTROLLER://192.168.29.13:9093
 
 # Define inter-broker communication protocol
 inter.broker.listener.name=PLAINTEXT

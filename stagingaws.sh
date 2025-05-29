@@ -279,3 +279,11 @@ DROP TABLE IF EXISTS
   "super_admin",
   "verification"
 CASCADE;
+
+
+
+
+# drop contraint in mongo db
+use oem_credentials
+db.oemcredentials.dropIndex("providerContractId_1")
+db.oemcredentials.getIndexes()
