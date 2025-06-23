@@ -1,0 +1,24 @@
+✅ Step-by-Step: Change an ENUM Value in PostgreSQL
+
+    Replace org_contract_transaction_payment_purpose_enum with your actual enum name if different.
+
+1. Add the New Enum Value
+
+ALTER TYPE org_contract_transaction_payment_purpose_enum 
+ADD VALUE IF NOT EXISTS 'New Contract Subscribed';
+
+2. Update All Existing Rows Using the Old Value
+
+UPDATE public.org_contract_transaction
+SET purpose = 'New Contract Subscribed'
+WHERE purpose = 'Subscription to a New Plan';
+
+✅ Now your app can safely use "New Contract Subscribed"
+
+If your TypeScript/Node code uses this value:
+
+export const contractTransactionPurposeEnum = {
+  SUBSNEWPLAN: "New Contract Subscribed",
+};
+
+It will now match with the database.

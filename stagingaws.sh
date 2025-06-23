@@ -63,12 +63,9 @@ sudo scp -i ~/Downloads/Staging_Suhora.pem /home/suhora/Downloads/External-User-
 # If you want to transfer the entire Exte directory from the EC2 instance to your local
 sudo scp -i ~/Downloads/staging_Suhora.pem -r ubuntu@43.204.153.130:/home/ubuntu/Documents/Exte ~/Documents/
 
-# If you're transferring a specific file
-sudo scp -i ~/Downloads/staging_Suhora.pem ubuntu@43.204.153.130:/home/ubuntu/Documents/example.txt ~/Documents/
-
 # Transfer file from ec2 instance to my local system
 echo "Transferring files from EC2 instance to local system..."
-sudo scp -i ~/Downloads/staging_Suhora.pem ubuntu@43.204.153.130:/home/ubuntu/Documents/Exte
+sudo scp -i ~/Downloads/Staging_Suhora.pem ubuntu@43.204.153.130:/home/ubuntu/Documents/Exte
 
 
 # Connect with DB
@@ -204,6 +201,14 @@ head /home/ubuntu/oem_service_manager_db.commonFilters.json
 # First go to the normal terminal
 echo "Importing MongoDB data..."
 mongoimport --db oem_service_manager_db --collection commonFilters --file /home/ubuntu/Documents/oem_service_manager_db.commonFilters.json --jsonArray
+mongoimport \
+  --db oem_service_manager_db \
+  --collection filtersByCategory \
+  --file /home/ubuntu/Documents/oem_service_manager_db.filtersByCategory.json \
+  --jsonArray \
+  --username yourMongoUser \
+  --password yourMongoPassword \
+  --authenticationDatabase admin
 
 # See the details of collections
 echo "Showing details of collections..."
@@ -287,3 +292,32 @@ CASCADE;
 use oem_credentials
 db.oemcredentials.dropIndex("providerContractId_1")
 db.oemcredentials.getIndexes()
+
+
+
+//mongo_dump
+mongodump --host=localhost --port=27017 \
+  --username=yourMongoUsername \
+  --password=yourMongoPassword \
+  --authenticationDatabase=admin \
+  --db=oem_credentials \
+  --out=/home/ubuntu/Documents
+
+
+//mongo restore
+mongorestore --db=oem_credentials /home/ubuntu/Documents/oem_credentials
+
+
+mongorestore \
+  --host=localhost \
+  --port=27017 \
+  --username=yourMongoUsername \
+  --password=yourMongoPassword \
+  --authenticationDatabase=admin \
+  --db=oem_credentials \
+  /home/ubuntu/Documents/oem_credentials
+
+
+  mongoexport   --uri="mongodb://username:password@localhost:27017/oem_credentials?authSource=admin"   --collection=oemcredentials   --type=csv   --fields=$FIELDS   --out=oemcredentials.csv
+
+mongosh -u admin -p mypassword --authenticationDatabase admin
