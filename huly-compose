@@ -169,8 +169,8 @@ services:
       - SOURCE=spade@suhora.com
       - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=465
-      - SMTP_USERNAME=spade@suhora.com
-      - SMTP_PASSWORD=wvjk eykd nick lvvs  # Make sure to replace with your actual SMTP password or use a secret manager
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=  # Make sure to replace with your actual SMTP password or use a secret manager
     restart: unless-stopped
 
   love:
