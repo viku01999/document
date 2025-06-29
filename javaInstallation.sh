@@ -20,7 +20,7 @@ echo "Setting environment variables"
 sudo nano /etc/profile
 
 # Add the following lines at the end of the file:
-export JAVA_HOME=/opt/jdk-21.0.6
+export JAVA_HOME=/opt/jdk-21.0.7
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Reload the profile
@@ -38,7 +38,7 @@ echo "Now setup for all users and terminal of your system"
 sudo nano ~/.bashrc
 
 # Add the following line at the end of the file:
-export JAVA_HOME=/opt/jdk-21.0.6
+export JAVA_HOME=/opt/jdk-21.0.7
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Apply Changes:
