@@ -208,3 +208,10 @@ SET "finalDataJson" = '[
   }
 ]'
 WHERE "archiveSubOrderId" = 'fc4be608-43b5-4311-877c-a710d068a41a';
+
+
+
+
+select * from organization_contract_binding where contract_id = 'ff992063-c692-47e0-a843-182dd33a761c';
+f9afa8f2-df36-47fd-a799-91c249564c86
+update organization_contract_binding set valid_till = '2025-07-11' where org_contrcat_binding_id = 'f9afa8f2-df36-47fd-a799-91c249564c86';

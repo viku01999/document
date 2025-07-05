@@ -130,30 +130,6 @@ cd /usr/local/kafka_2.12-3.9.0/
 echo "Installing pnpm..."
 npm install -g pnpm
 
-# Install tmux
-echo "Installing tmux..."
-sudo apt update
-sudo apt install tmux -y
-
-# tmux commands reference
-echo "tmux commands reference..."
-echo "Start a new session: tmux"
-echo "Attach to a session: tmux attach-session -t 0"
-echo "Create a new window: Ctrl + b, then c"
-echo "Switch to the next window: Ctrl + b, then n"
-echo "Switch to the previous window: Ctrl + b, then p"
-echo "Split the window vertically: Ctrl + b, then %"
-echo "Split the window horizontally: Ctrl + b, then \""
-echo "Switch between panes: Ctrl + b, then arrow keys"
-echo "Detach from tmux: Ctrl + b, then d"
-echo "Close a window/pane: exit"
-echo "List all windows: Ctrl + b, then w"
-echo "Rename a window: Ctrl + b, then ,"
-echo "List tmux sessions: tmux ls"
-echo "Attach tmux session: tmux attach-session -t <session_name>"
-# Enable Mouse Mode in the Global Configuration
-set -g mouse on
-tmux source-file /etc/tmux.conf
 
 
 # Transfer files and hidden files
@@ -165,54 +141,6 @@ echo "Providing permissions to directories..."
 sudo chown -R ubuntu:ubuntu /home/ubuntu/Documents/spade_backend/iceye-microservice
 sudo chmod -R 777 /home/ubuntu/Documents/spade_backend/iceye-microservice
 ls -la /home/ubuntu/Documents/spade_backend/iceye-microservice
-
-# Make unautorise mongo db config
-echo "Making unautorise mongo db config..."
-sudo nano /etc/mongod.conf
-
-# Open mongosh terminal
-echo "Opening mongosh terminal..."
-mongosh
-
-# Show all dbs
-echo "Showing all dbs..."
-show dbs
-
-# Switch into admin
-echo "Switching into admin db..."
-use admin
-
-# Enter OEM service manager db
-echo "Entering OEM service manager db..."
-use oem_service_manager
-
-# List out all the collections
-echo "Listing out all the collections..."
-show collections
-
-# Drop collection
-echo "Dropping collection..."
-db.commonFilters.drop()
-
-# check head 
-head /home/ubuntu/oem_service_manager_db.commonFilters.json
-
-# Import MongoDB data
-# First go to the normal terminal
-echo "Importing MongoDB data..."
-mongoimport --db oem_service_manager_db --collection commonFilters --file /home/ubuntu/Documents/oem_service_manager_db.commonFilters.json --jsonArray
-mongoimport \
-  --db oem_service_manager_db \
-  --collection filtersByCategory \
-  --file /home/ubuntu/Documents/oem_service_manager_db.filtersByCategory.json \
-  --jsonArray \
-  --username yourMongoUser \
-  --password yourMongoPassword \
-  --authenticationDatabase admin
-
-# See the details of collections
-echo "Showing details of collections..."
-db.commonFilters.find().pretty()
 
 # Install serve to run frontend
 echo "Installing serve to run frontend..."
@@ -257,21 +185,6 @@ echo "Running the script locally..."
 /home/suhora/start_tmux_on_boot.sh
 
 
-
-
-# --------------------------------------------------------------------------------------------------------------------------
-
-# Drop table
-psql -h 127.0.0.1 -U spade_admin -d external_user -c "DROP TABLE IF EXISTS public.oem_master CASCADE;"
-
-# backup in table staging
-PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/oem_backup.sql
-pg_dump -h 172.31.31.226 -U spade_admin -W -d external_user -t public.product_master -f product_master.sql
-
-# restore in table staging
-PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/product_master.sql
-
-
 # ------------------------- drop all table----------------------------------------
 DROP TABLE IF EXISTS 
   "SuperAdminPermission",
@@ -285,39 +198,14 @@ DROP TABLE IF EXISTS
   "verification"
 CASCADE;
 
+# --------------------------------------------------------------------------------------------------------------------------
 
+# Drop table
+psql -h 127.0.0.1 -U spade_admin -d external_user -c "DROP TABLE IF EXISTS public.oem_master CASCADE;"
 
+# backup in table staging
+PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/oem_backup.sql
+pg_dump -h 172.31.31.226 -U spade_admin -W -d external_user -t public.product_master -f product_master.sql
 
-# drop contraint in mongo db
-use oem_credentials
-db.oemcredentials.dropIndex("providerContractId_1")
-db.oemcredentials.getIndexes()
-
-
-
-//mongo_dump
-mongodump --host=localhost --port=27017 \
-  --username=yourMongoUsername \
-  --password=yourMongoPassword \
-  --authenticationDatabase=admin \
-  --db=oem_credentials \
-  --out=/home/ubuntu/Documents
-
-
-//mongo restore
-mongorestore --db=oem_credentials /home/ubuntu/Documents/oem_credentials
-
-
-mongorestore \
-  --host=localhost \
-  --port=27017 \
-  --username=yourMongoUsername \
-  --password=yourMongoPassword \
-  --authenticationDatabase=admin \
-  --db=oem_credentials \
-  /home/ubuntu/Documents/oem_credentials
-
-
-  mongoexport   --uri="mongodb://username:password@localhost:27017/oem_credentials?authSource=admin"   --collection=oemcredentials   --type=csv   --fields=$FIELDS   --out=oemcredentials.csv
-
-mongosh -u admin -p mypassword --authenticationDatabase admin
+# restore in table staging
+PGPASSWORD="WZf5RrrQ48egpjio" psql -h 127.0.0.1 -U spade_admin -d external_user -f /home/ubuntu/Documents/product_master.sql
