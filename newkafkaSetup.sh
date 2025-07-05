@@ -70,12 +70,6 @@ tar -xvzf kafka-4.0.0-src.tgz
 cd kafka-4.0.0-src
 ./gradlew clean releaseTarGz
 
-# Extract the binary package
-cd core/build/distributions
-
-mkdir -p ~/kafka && tar -xvzf kafka_*.tgz -C ~/kafka --strip-components=1
-cd ~/kafka
-
 # ----------------------------------------------------------------------------
 # ✅ STEP 2: Configure Environment Variables
 # ----------------------------------------------------------------------------
