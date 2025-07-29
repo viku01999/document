@@ -31,14 +31,14 @@ nano ~/Documents/pg_backup.sh
 #!/bin/bash
 
 # Define variables for PostgreSQL user, database names, and backup directories
-PGUSER="spade_admin"        # Replace with your PostgreSQL user
-PGHOST="192.168.29.154"     # Adjust if your PostgreSQL is on a remote server
+PGUSER=""        # Replace with your PostgreSQL user
+PGHOST=""     # Adjust if your PostgreSQL is on a remote server
 PGPORT="5432"               # Adjust if your PostgreSQL is using a different port
 PGPASSWORD="your_password"  # Replace with your PostgreSQL password
 BACKUP_BASE_DIR="$HOME/Documents/db_backup"  # Base directory for backups
 
 # Databases to backup
-DB_NAMES=("spade_order" "external_user" "internal_user")
+DB_NAMES=("db1" "db2")
 
 # Loop through each database and perform the backup
 for DB in "${DB_NAMES[@]}"
@@ -97,3 +97,46 @@ crontab -e
 
 # You can monitor the cron jobs and troubleshoot any issues using the following command:
 # grep CRON /var/log/syslog
+
+
+
+# working
+#!/bin/bash
+
+# Set PATH explicitly for cron environment
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Define variables for PostgreSQL user, database names, and backup directories
+PGUSER=""        # Replace with your PostgreSQL user
+PGHOST=""     # Adjust if your PostgreSQL is on a remote server
+PGPORT="5432"               # Adjust if your PostgreSQL is using a different port
+PGPASSWORD=""  # Replace with your PostgreSQL password
+BACKUP_BASE_DIR="$HOME/Documents/db_backup"  # Base directory for backups
+
+# Databases to backup
+DB_NAMES=("db1" "db2")
+
+# Loop through each database and perform the backup
+for DB in "${DB_NAMES[@]}"
+do
+  BACKUP_DIR="$BACKUP_BASE_DIR/$DB"
+  DATE=$(date +%Y%m%d%H%M)
+  echo "DEBUG: DATE variable is '$DATE'"
+  BACKUP_FILE="$BACKUP_DIR/${DB}_$DATE.sql"
+  echo "DEBUG: Backup file path is '$BACKUP_FILE'"
+
+  # Create backup directory if it doesn't exist
+  mkdir -p "$BACKUP_DIR"
+
+  # Set PGPASSWORD environment variable to avoid password prompt
+  export PGPASSWORD=$PGPASSWORD
+
+  # Create backup using pg_dump
+  pg_dump -U $PGUSER -h $PGHOST -p $PGPORT $DB > $BACKUP_FILE
+
+  echo "Backup of $DB completed: $BACKUP_FILE"
+done
+
+# Delete backup files older than 30 days
+find $BACKUP_BASE_DIR -type f -name "*.sql" -mtime +30 -exec rm {} \;
+echo "Old backup files (older than 30 days) deleted."

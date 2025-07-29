@@ -36,3 +36,12 @@ psql -d my_database -c "SELECT PostGIS_Version();"
 # Step 8: Final Cleanup and Exit
 echo "PostGIS setup completed successfully!"
 exit
+
+
+
+
+
+
+# access remote server postgresql database
+# To access the PostgreSQL database remotely, ensure that the PostgreSQL configuration allows remote connections.
+psql -h <REMOTE HOST> -p <REMOTE PORT> -U <DB_USER> <DB_NAME>
