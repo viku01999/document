@@ -13,9 +13,9 @@ psql
 echo "Changing password for 'postgres' user..."
 ALTER USER postgres WITH PASSWORD 'newpassword';
 
--- Step 3: Create the user 'spade_admin' with password 'Spade_Suhora@123'
+-- Step 3: Create the user 'spade_admin' with password ''
 echo "Creating user 'spade_admin'..."
-CREATE USER spade_admin WITH PASSWORD 'WZf5RrrQ48egpjio';
+CREATE USER spade_admin WITH PASSWORD '';
 
 -- Step 4: Grant privileges to the user 'spade_admin'
 echo "Granting privileges to 'spade_admin'..."
